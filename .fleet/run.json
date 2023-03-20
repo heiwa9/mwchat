@@ -1,0 +1,15 @@
+{
+    "configurations": [
+        {
+            "type": "go",
+            "name": "mwchat",
+            "goExecPath": "/usr/local/go/bin/go",
+            "buildParams": ["mwchat"],
+            "runParams": [
+                "--key","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",
+                "--proxy","http://127.0.0.1:7890"
+            ],
+        },
+
+    ]
+}
