@@ -5,6 +5,6 @@
 上下文可用
 私信、群聊可用
 
-运行：`go run . --key="your open ai key" --proxy="your proxy address"`
-eg: `go run . --key="xxxxxx123xxxsds" --proxy="127.0.0.1:7890"`
-    不使用代理：`go run . --key="your open ai key"`  
+运行：`go run . --key="your open ai key" --proxy="your proxy address"`<br>
+eg: `go run . --key="xxxxxx123xxxsds" --proxy="127.0.0.1:7890"`<br>
+不使用代理：`go run . --key="your open ai key"`<br>
