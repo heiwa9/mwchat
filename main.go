@@ -40,36 +40,40 @@ func main() {
 		if !found {
 			return
 		}
-		if content == "清除会话" {
-			cmc.FindCtx(msg.FromUserName).Clear()
-			msg.ReplyText("上下文已清空")
-			return
-		}
-		mc := cmc.FindCtx(msg.FromUserName)
-		if mc.IsLock() {
-			msg.ReplyText("请等待上条内容回复")
-		}
-		mc.Lock()
-		mc.Add(chatgpt.ChatMessage{
-			Role:    "user",
-			Content: content,
-		})
+        go func(){
+            fmt.Println(content)
+            if content == "清除会话" {
+                cmc.FindCtx(msg.FromUserName).Clear()
+                msg.ReplyText("上下文已清空")
+                return
+            }
+            mc := cmc.FindCtx(msg.FromUserName)
+            if mc.IsLock() {
+                msg.ReplyText("请等待上条内容回复")
+            }
+            mc.Lock()
+            mc.Add(chatgpt.ChatMessage{
+                Role:    "user",
+                Content: content,
+                })
 
-		response, err := ChatGpt.CreateChatCompletion(chatgpt.CreateChatCompletionRequest{
-			Model:    chatgpt.GPT3Dot5Turbo0301,
-			Messages: mc.HistoryMsgs,
-		})
-		if err != nil {
-			msg.ReplyText(fmt.Sprintf("completions error: %s", err.Error()))
-			mc.UnLock()
-			return
-		}
-		var res string
-		for _, c := range response.Choices {
-			res += c.Message.Content
-		}
-		msg.ReplyText(res)
-		mc.UnLock()
+            response, err := ChatGpt.CreateChatCompletion(chatgpt.CreateChatCompletionRequest{
+                Model:    chatgpt.GPT3Dot5Turbo0301,
+                Messages: mc.HistoryMsgs,
+                })
+            if err != nil {
+                msg.ReplyText(fmt.Sprintf("completions error: %s", err.Error()))
+                mc.UnLock()
+                return
+            }
+            var res string
+            for _, c := range response.Choices {
+                res += c.Message.Content
+            }
+            fmt.Println(res)
+            msg.ReplyText(res)
+            mc.UnLock()
+        }()
 	}
 	// 注册登陆二维码回调
 	bot.UUIDCallback = func(uuid string) {

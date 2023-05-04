@@ -15,6 +15,9 @@ type MsgCtx struct {
 
 func (mc *MsgCtx) Add(cm v1.ChatMessage){
     mc.HistoryMsgs = append(mc.HistoryMsgs,cm)
+    if len(mc.HistoryMsgs) >= 6 {
+        mc.HistoryMsgs = mc.HistoryMsgs[len(mc.HistoryMsgs) - 5:]
+    }
 }
 
 func (mc *MsgCtx) Clear() {
@@ -50,7 +53,6 @@ func (cmc *ChatMsgCtx) FindCtx(uuid string) *MsgCtx {
 	cmc.chatMsgCtxLock.Lock()
 	if mc, ok := cmc.chatMsgCtx[uuid]; ok {
         mc.LastTime = time.Now()
-		cmc.chatMsgCtxLock.Unlock()
 		return mc
 	}
 	ctx := &MsgCtx{
@@ -59,7 +61,6 @@ func (cmc *ChatMsgCtx) FindCtx(uuid string) *MsgCtx {
         lock:        false,
     }
 	cmc.chatMsgCtx[uuid] = ctx
-	cmc.chatMsgCtxLock.Unlock()
 	return ctx
 }
 
